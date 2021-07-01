@@ -2,7 +2,6 @@ import router from './router.js';
 import Vuex from 'vuex';
 import createPersistedState from "vuex-persistedstate";
 
-
 // init store //
 export const store = new Vuex.Store({
   plugins: [createPersistedState()],
@@ -38,24 +37,15 @@ export const store = new Vuex.Store({
         },
       },
       actions: {
-        loadInitialAuthenticationState({ commit }) {
-          const signedIn = window.gapi.auth2.getAuthInstance().currentUser.get();
-          if (signedIn) {
-            commit('storeUser', signedIn.mc);
-            commit('storeUserId', window.gapi.auth2.getAuthInstance().currentUser.get().getId());
-          } else {
-            commit('clearAuthenticationState');
-          }
-        },
         logIn({ commit }) {
-          window.gapi.auth2.getAuthInstance().signIn()
-          .then(function(result) {
+          console.log(this.$gapi)
+          
             commit('storeUser',result)
             db.collection('users').get().then(querySnapshot => {
               const documents = querySnapshot.docs.map(doc => doc.data());
               console.log(documents)
             })
-          })
+     
           .catch(error => error)
         },
         logOut({ commit }, {} = {}) {
